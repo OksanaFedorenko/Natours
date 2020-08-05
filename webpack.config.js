@@ -1,15 +1,16 @@
 const path = require('path');
+const webpack = require("webpack");
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
 module.exports = {
-  mode: "development",
-  entry: './src/index.js',
+  //mode: "development",
+  entry: "./src/index.js",
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [
@@ -18,9 +19,9 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader'
-          }
-        ]
+            loader: "babel-loader",
+          },
+        ],
       },
 
       //Loading images
@@ -31,22 +32,13 @@ module.exports = {
             loader: "file-loader",
             options: {
               outputPath: "img",
-              name: "[name]-[sha1:hash:7].[ext]",
-            }
-          }
-        ]
-      },
-
-      //Loading HTML
-      {
-        test: /\.(html)$/,
-        use: [
-          {
-            loader: "html-loader",
-            options: { minimize: true },
+              name: "[name].[ext]",
+              //name: "[name]-[sha1:hash:7].[ext]",
+            },
           },
         ],
       },
+      
       //Loading css
       {
         test: /\.(css)$/,
@@ -60,8 +52,7 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              outputPath: "css",
-              name: "[name].[ext]",
+              publicPath: "../", // path to director where assets folder is located
             },
           },
 
@@ -71,13 +62,13 @@ module.exports = {
 
           {
             loader: "sass-loader",
-          }
-          
-        ]
+          },
+        ],
       },
+
       // Loading fonts
       {
-        test: /\.(ttf|otf|eot|woff|woff2)$/,
+        test: /\.(ttf|otf|svg|eot|woff|woff2)$/,
         use: [
           {
             loader: "file-loader",
@@ -91,23 +82,30 @@ module.exports = {
       //Loading video
       {
         test: /\.(mp4|webm)$/,
-        loader: "file-loader",
-      }
-    ]
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              outputPath: "img",
+              name: "[name].[ext]",
+            },
+          },
+        ],
+      },
+    ],
   },
 
   plugins: [
     new HtmlWebpackPlugin({
       title: "Natours | Exciting tours for adventurous people",
-      template: "./src/index.html",
-      filename: "./index.html",
+      template: "src/index.html",
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-    })
+      filename: "css/[name].css",
+    }),
   ],
 
   devServer: {
     open: true,
-  }
+  },
 };
